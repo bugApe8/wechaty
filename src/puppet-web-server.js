@@ -12,6 +12,10 @@ const path			  = require('path')
 const https       = require('https')
 const bodyParser  = require('body-parser')
 
+/**
+ * express是一个简约、快速、类似于Sinatra的Node.js后端框架，为开发可扩展的后端
+ * 应用程序提供了强大的功能和工具。
+ */
 const Express       = require('express')
 const EventEmitter  = require('events')
 const log           = require('npmlog')
@@ -24,16 +28,19 @@ class Server extends EventEmitter {
     
     this.logined  = false
 
+    //注册登录，登出事件的处理方法
     this.on('login' , () => this.logined = true  )
     this.on('logout', () => this.logined = false )
 
   }
 
   init() {
+    //三件套 express->httpsServer->socketio
     this.express  = this.createExpress()
     this.server   = this.createHttpsServer(this.express, this.port)
     this.socketio = this.createSocketIo(this.server)
 
+    //创建一个浏览器
     this.browser  = this.createBrowser()
 
     return new Promise((resolve, reject) => {
@@ -91,6 +98,7 @@ class Server extends EventEmitter {
       next()
     })
 
+    //定义了一个路由
     app.get('/ding', function (req, res) {
       log.silly('Server', '%s GET /ding', new Date())
       res.end('dong')
@@ -109,11 +117,12 @@ class Server extends EventEmitter {
       log: true
     })
 
+    //注册连接事件处理函数
     socketServer.sockets.on('connection', (s) => {
       log.verbose('Server', 'got connection from browser')
       // save to instance: socketClient
       this.socketClient = s
-
+      
       s.on('disconnect', function() {
         log.verbose('Server', 'socket.io disconnected')
         /**

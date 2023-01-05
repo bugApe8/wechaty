@@ -32,6 +32,7 @@ if (typeof Wechaty!=='undefined') return 'Wechaty already injected?';
     var d = new Date()
     s = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + ' <Wechaty> ' + s
 
+    //实现在console里面打印日志 创建一个iframe元素，挂载到body里面，打印日志后再删掉
     var i = document.createElement('iframe')
     i.style.display = 'none'
     document.body.appendChild(i)
@@ -64,6 +65,7 @@ if (typeof Wechaty!=='undefined') return 'Wechaty already injected?';
   function isReady() { 
     return !!((typeof angular)!=='undefined' && angular.element && angular.element("body"))
   }
+  
   function init() {
     if (!isReady()) {
       clog('angular not ready. wait 500ms...')

@@ -30,24 +30,27 @@ class PuppetWeb extends Puppet {
 
   toString() { return `Class PuppetWeb({port:${this.port}})` }
 
+  //这里其实整个流程的起始点
   init() { 
-    this.server = new WebServer({port: this.port})
+    this.server = new WebServer({port: this.port})//启动web服务
 
+    //注册登录，登出事件处理函数
     ;[  // events. ';' for seprate from the last code line
       'login'
       , 'logout'
     ].map( event => 
       this.server.on(event, data => this.emit(event, data) ) 
     )
-    
+    //注册消息事件处理函数
     this.server.on('message', data => {
       const m = new Message(data)
       this.emit('message', m) 
     })
 
-    return this.server.init() 
+    return this.server.init() //PuppetWebServer初始化
   }
 
+  //发送消息
   send(message) {
     const toContact = message.get('to')
     const content   = message.get('content')

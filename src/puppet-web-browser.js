@@ -29,14 +29,15 @@ class Browser {
 
   init() {
     return this.open()
-    .then(this.inject.bind(this))
+    .then(this.inject.bind(this))//通过注入接管浏览器操作
   }
 
+  //模拟浏览器打开微信官方登录链接
   open() {
     const WX_URL = 'https://wx.qq.com'
 
     log.verbose('Browser', `init ${this.browser}:${this.port}`)
-    this.driver = new WebDriver.Builder().forBrowser(this.browser).build()
+    this.driver = new WebDriver.Builder().forBrowser(this.browser).build()//创建浏览器驱动，默认chrome
 
     /*
     this.driver = new WebDriver.Builder()//.forBrowser(this.browser).build()
@@ -49,6 +50,7 @@ class Browser {
     return this.driver.get(WX_URL)
   }
 
+  //获取文件内容
   getInjectio() {
     return fs.readFileSync(
       path.join(path.dirname(__filename), 'puppet-web-injectio.js')
@@ -56,7 +58,7 @@ class Browser {
     )    
   }
   inject() {
-    const injectio = this.getInjectio()
+    const injectio = this.getInjectio()//获取注入器
     log.verbose('Browser', 'injecting')
     try {
       var p = this.execute(injectio, this.port)
@@ -86,6 +88,7 @@ class Browser {
     })
   }
 
+  //在创建的浏览器驱动中执行脚本 selenium-webdriver
   execute(script, ...args) {
     //log.verbose('Browser', `Browser.execute(${script})`)
     if (!this.driver) 

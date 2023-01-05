@@ -8,9 +8,16 @@
  *
  */
 
+/**
+ * events模块是nodejs中最重要的一个模块之一，对外只暴露了一个对象，
+ * 就是EventEmitter,其作用只有两个，事件的发射和监听
+ */
 const EventEmitter = require('events')
 const log = require('npmlog')
 
+/**
+ * 
+ */
 class Puppet extends EventEmitter {
   constructor() {
     super()
@@ -58,7 +65,12 @@ class Puppet extends EventEmitter {
   }
 
 }
-
+/**
+ * Object.assign()方法将所有可枚举（Object.propertyIsEnumerable()返回true）的自有(Object.hasOwnProperty()返回true)
+ * 属性从一个或多个源对象复制到目标对象，返回修改后的对象
+ * Object.assign(target, ...source)
+ * 什么意思呢？就是经过下面的操作，Message,Contact,Group对象里面的自由属性会被复制给Puppet,相当于Puppet就是它们三个的结合
+ */
 Object.assign(Puppet, {
   Message:    require('./message')
   , Contact:  require('./contact')

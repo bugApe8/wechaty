@@ -23,7 +23,7 @@ class Wechaty extends EventEmitter {
 
     switch(options.puppet) {
       case 'web':
-        this.puppet = new Puppet.Web({port: options.port})
+        this.puppet = new Puppet.Web({port: options.port})//下面有定义Puppet.Web = PuppetWeb,所以这里其实是初始化了PuppetWeb
         break
       default:
         throw new Error('Puppet unknown: ' + puppet)
@@ -43,7 +43,7 @@ class Wechaty extends EventEmitter {
     })
   }
 
-  init()          { return this.puppet.init() }
+  init()          { return this.puppet.init() }//就是PuppetWeb初始化
   currentUser()   { return this.puppet.currentUser() }
   send(message)   { return this.puppet.send(message) }
 
