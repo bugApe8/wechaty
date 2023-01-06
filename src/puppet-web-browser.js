@@ -46,7 +46,7 @@ class Browser {
   initDriver() {
     log.verbose('Browser', 'initDriver(head: %s)', this.head)
     if (this.head) {
-      if (/firefox/i.test(this.head)) {
+      if (/firefox/i.test(this.head)) {//支持firefox
         this.driver = new WebDriver.Builder()
         .setAlertBehavior('ignore')
         .forBrowser('firefox')
@@ -58,7 +58,7 @@ class Browser {
         .build()
       }
     } else {
-      this.driver = this.getPhantomJsDriver()
+      this.driver = this.getPhantomJsDriver()//如果没设置头，就使用无头浏览器
     }
     // console.log(this.driver)
     return new Promise((resolve, reject) => {
@@ -69,6 +69,7 @@ class Browser {
     })
   }
 
+  //打开微信官方网址
   open(url) {
     url = url || 'https://wx.qq.com'
     log.verbose('Browser', `open()ing at ${url}`)

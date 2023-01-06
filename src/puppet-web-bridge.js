@@ -82,6 +82,7 @@ class Bridge {
       , 'utf8'
     )
   }
+  //相当关键的一个东西，通过注入实现对浏览器的控制和事件监听
   inject() {
     log.verbose('Bridge', 'inject()')
     const injectio = this.getInjectio()

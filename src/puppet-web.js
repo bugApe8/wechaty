@@ -14,11 +14,16 @@
 /**************************************
  *
  * Class PuppetWeb
+ * Puppet本意是木偶，傀儡，按上面的注释描述，就是通过puppet来控制wechat网页
+ * 大概就是 browser <-> puppet --> wechat server
+ * browser <-> wechat server
+ * 
+ * puppet起到监听事件，包括浏览器的连接，断连，
  *
  ***************************************/
 const util = require('util')
 const fs  = require('fs')
-const co  = require('co')
+const co  = require('co')//优雅实现异步代码的库
 
 const log = require('./npmlog-env')
 
@@ -49,13 +54,13 @@ class PuppetWeb extends Puppet {
 
     return co.call(this, function* () {
 
-      yield this.initAttach(this)
+      yield this.initAttach(this)//初始化绑定
       log.verbose('PuppetWeb', 'initAttach() done')
 
-      yield this.initServer()
+      yield this.initServer()//启动服务
       log.verbose('PuppetWeb', 'initServer() done')
 
-      yield this.initBrowser()
+      yield this.initBrowser()//创建浏览器实例
       log.verbose('PuppetWeb', 'initBrowser() done')
 
       yield this.initBridge()
@@ -116,10 +121,12 @@ class PuppetWeb extends Puppet {
 
     return co.call(this, function* () {
       yield this.browser.init()
+      //这个链接已经打不开了，不知道是什么东西
       yield this.browser.open('https://res.wx.qq.com/zh_CN/htmledition/v2/images/icon/ico_loading28a2f7.gif')
       yield this.checkSession()
       yield this.loadSession().catch(e => { log.verbose('PuppetWeb', 'loadSession rejected: %s', e) /* fail safe */ })
       yield this.checkSession()
+      //下面打开的是微信官方登录页面
       yield this.browser.open()
       yield this.checkSession()
     }).catch(e => {
@@ -154,12 +161,12 @@ class PuppetWeb extends Puppet {
     ].map(e => {
       server.on(e, data => {
         log.verbose('PuppetWeb', 'Server event[%s]: %s', e, data)
-        this.emit(e, data)
+        this.emit(e, data)//冒泡给上层，就是wechaty
       })
     })
 
     this.server = server
-    return this.server.init()
+    return this.server.init()//服务启动
   }
 
   onServerConnection(data) {
@@ -275,6 +282,7 @@ class PuppetWeb extends Puppet {
   getContact(id)  { return this.bridge.getContact(id) }
   logined() { return !!(this.user) }
 
+  //检查session，返回cookies
   checkSession() {
     log.verbose('PuppetWeb', `checkSession(${this.session})`)
     return this.browser.driver.manage().getCookies()

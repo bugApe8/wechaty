@@ -36,10 +36,10 @@ class Wechaty extends EventEmitter {
     log.verbose('Wechaty', 'head: %s'   , this.options.head)
     log.verbose('Wechaty', 'session: %s', this.options.session)
 
-    this.initPuppet()
+    this.initPuppet()//初始化傀儡
     this.initEventHook()
 
-    return this.puppet.init()
+    return this.puppet.init()//上面的初始化只是实例化了一下，这里才是真正的初始化
     .then(r => {
       return this // for chaining
     })
@@ -47,17 +47,18 @@ class Wechaty extends EventEmitter {
   initPuppet() {
     switch (this.options.puppet) {
       case 'web':
-        this.puppet = new Puppet.Web({
+        this.puppet = new Puppet.Web({//实例化PuppetWeb
           head:   this.options.head
           , port: this.options.port
           , session: this.options.session
         })
         break
-      default:
+      default://仅支持web方式
         throw new Error('Puppet unsupport(yet): ' + this.options.puppet)
     }
     return Promise.resolve(this.puppet)
   }
+  //初始化事件钩子
   initEventHook() {
     // scan qrCode
     this.puppet.on('scan', (e) => {
@@ -90,6 +91,7 @@ class Wechaty extends EventEmitter {
   send(message)   { return this.puppet.send(message) }
   reply(message, reply) { return this.puppet.reply(message, reply) }
 
+  //这个方法只是为了测试浏览器和puppetweb服务之间的通信是否正常，心跳
   ding()          {
     // TODO: test through the server & browser
     return 'dong'

@@ -79,6 +79,9 @@ return (function(port) {
   /**
   *
   * Functions that Glued with AngularJS
+  * 这里使用angularjs主要是因为微信网页版是angularjs开发的，下面的文章有详细分析
+  * https://www.cnblogs.com/vimisky/p/6260713.html
+  * 
   *
   */
   function isWxLogin() { return !!(window.MMCgi && window.MMCgi.isLogin) }
@@ -122,6 +125,7 @@ return (function(port) {
   function glueAngular() {
     var injector  = angular.element(document).injector()
 
+    //下面这些奇奇怪怪的东西，其实都是网页自带的东西，通过注入器获取
     var http            = injector.get('$http')
     var accountFactory  = injector.get('accountFactory')
     var chatFactory     = injector.get('chatFactory')
@@ -173,7 +177,7 @@ return (function(port) {
         + ' to '
         + code
       )
-      Wechaty.emit('scan', {
+      Wechaty.emit('scan', {//这里会触发scan事件
         code:   code
         , url:  url
       })
